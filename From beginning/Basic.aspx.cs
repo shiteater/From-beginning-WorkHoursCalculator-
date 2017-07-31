@@ -46,39 +46,49 @@ namespace From_beginning
             string datum = Calendar1.SelectedDate.ToShortDateString();
 
             // možda napraviti try catch
-            string converted = DateTime.ParseExact(datum, "dd.M.yyyy.", CultureInfo.InvariantCulture)
+
+            try
+            {
+                string converted = DateTime.ParseExact(datum, "dd.M.yyyy.", CultureInfo.InvariantCulture)
                               .ToString("yyyy-MM-dd");
 
 
-            cmd.Parameters.AddWithValue("@V1", converted);
-            cmd.CommandText = "select * from Kalkulacije where Datum LIKE @V1";
-            
-            using (SqlDataReader read = cmd.ExecuteReader())
-            {
-                while (read.Read())
+                cmd.Parameters.AddWithValue("@V1", converted);
+                cmd.CommandText = "select * from Kalkulacije where Datum LIKE @V1";
+
+                using (SqlDataReader read = cmd.ExecuteReader())
                 {
-                    // čitanje iz baze i upisivanje u tbx TbxTotalHours
-                    TbxTotalHours.Text = (read["Ukupno_odradeno_sati"].ToString());
-                    var TotalHours = 0;
-                    Int32.TryParse(TbxTotalHours.Text, out TotalHours);
+                    while (read.Read())
+                    {
+                        // čitanje iz baze i upisivanje u tbx TbxTotalHours
+                        TbxTotalHours.Text = (read["Ukupno_odradeno_sati"].ToString());
+                        var TotalHours = 0;
+                        Int32.TryParse(TbxTotalHours.Text, out TotalHours);
 
-                    // čitanje iz baze
-                    var TotalEarnings= (read["Satnica"].ToString());
-                    var _TotalEarnings = 0;
-                    Int32.TryParse(TotalEarnings, out _TotalEarnings);
+                        // čitanje iz baze
+                        var TotalEarnings = (read["Satnica"].ToString());
+                        var _TotalEarnings = 0;
+                        Int32.TryParse(TotalEarnings, out _TotalEarnings);
 
-                    // upisivanje u TbxTotalEarnings
-                    var Ukupno = TotalHours* _TotalEarnings;
-                    TbxTotalEarnings.Text = Ukupno.ToString();
+                        // upisivanje u TbxTotalEarnings
+                        var Ukupno = TotalHours * _TotalEarnings;
+                        TbxTotalEarnings.Text = Ukupno.ToString();
 
-                    //{
-                    //    // you know that the parsing attempt
-                    //    // was successful
-                    //}
+                        //{
+                        //    // you know that the parsing attempt
+                        //    // was successful
+                        //}
 
-                    
+
+                    }
                 }
             }
+            finally
+            {
+                // da mi ne zablokira app na nepotpunjenim datumima tako da mogu spremiti današnji dan
+                continue;
+            }
+            
             con.Close();
            
         }
