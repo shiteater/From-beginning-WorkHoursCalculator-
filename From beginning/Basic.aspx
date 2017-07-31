@@ -19,10 +19,12 @@
     </asp:DropDownList>
     <br />
     <br />
+    Total Hours:
     <asp:TextBox ID="TbxTotalHours" runat="server" Width="180px">Total Hours</asp:TextBox>
     &nbsp;<br />
     <br />
     <br />
+    Total Earnings
     <asp:TextBox ID="TbxTotalEarnings" runat="server" Width="180px">Total Earnings</asp:TextBox>
     <br />
     <br />
